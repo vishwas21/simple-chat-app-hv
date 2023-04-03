@@ -1,0 +1,34 @@
+{
+    "name": "simple-chat-app-hv",
+    "version": "1.0.0",
+    "description": "### Team Members",
+    "main": "index.js",
+    "scripts": {
+        "test": "npm jest --coverage"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/vishwas21/simple-chat-app-hv.git"
+    },
+    "keywords": [
+        "Chat",
+        "Peer",
+        "to",
+        "Peer",
+        "Network",
+        "JavaScript"
+    ],
+    "author": "Vishwas B and Harshitha T K",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/vishwas21/simple-chat-app-hv/issues"
+    },
+    "homepage": "https://github.com/vishwas21/simple-chat-app-hv#readme",
+    "dependencies": {
+        "express": "^4.18.2",
+        "socket.io": "^4.6.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.22"
+    }
+}
