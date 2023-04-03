@@ -1,5 +1,5 @@
 const express = require("express");
-const http = require("http");
+const path = require("node:path");
 
 const app = express();
 
@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
     //     creator: "Vishwas B and Harshitha T K",
     // });
 
-    res.sendFile(__dirname + "/../client/index.html");
+    res.sendFile(path.resolve(__dirname + "/../client/index.html"));
 });
 
-module.exports = http.createServer(app);
+module.exports = app;
