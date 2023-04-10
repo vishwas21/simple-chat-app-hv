@@ -1,87 +1,95 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Socket.IO chat</title>
+        <title>My First Node App</title>
+        <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+            integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+            integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+            integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+            crossorigin="anonymous"
+        ></script>
         <script src="/socket.io/socket.io.js"></script>
+    </head>
+    <style>
+        body {
+            position: relative;
+            padding-top: 50px;
+            height: 500px;
+            color: #fff;
+            background-color: #00bcd4;
+        }
+        img {
+            height: 400px;
+            width: 1500px;
+        }
+        .jumbotron {
+            color: #070606;
+        }
+    </style>
+    <body>
+        <img src="img1.png" class="img-responsive" alt="Cinque Terre1" />
+        <div class="jumbotron">
+            <h1 class="display-4">Send Message</h1>
+            <br />
+            <input id="name" class="form-control" placeholder="Name" />
+            <br />
+            <textarea
+                id="message"
+                class="form-control"
+                placeholder="Your Message Here"
+            ></textarea>
+            <br />
+            <button id="send" class="btn btn-success">Send</button>
+        </div>
+        <div class="container">
+            <br />
+            <div id="messages"></div>
+        </div>
         <script>
             var socket = io();
+            $(() => {
+                $("#send").click(() => {
+                    sendMessage({
+                        name: $("#name").val(),
+                        message: $("#message").val(),
+                    });
+                });
 
-            var messages = document.getElementById("messages");
-            var form = document.getElementById("form");
-            var input = document.getElementById("input");
-
-            form.addEventListener("submit", function (e) {
-                e.preventDefault();
-                if (input.value) {
-                    socket.emit("chat message", input.value);
-                    input.value = " hi ";
-                }
+                getMessages();
             });
 
-            socket.on("chat message", function (msg) {
-                var item = document.createElement("li");
-                item.textContent = msg;
-                messages.appendChild(item);
-                window.scrollTo(0, document.body.scrollHeight);
-            });
+            socket.on("message", addMessages);
+
+            function addMessages(message) {
+                $("#messages").append(
+                    `<h4> ${message.name} </h4> <p> ${message.message} </p>`
+                );
+            }
+
+            function getMessages() {
+                $.get("http://localhost:3000/messages", (data) => {
+                    console.log("DATA ", data);
+                    data.forEach(addMessages);
+                });
+            }
+
+            function sendMessage(message) {
+                $.post("http://localhost:3000/messages", message);
+            }
         </script>
-        <style>
-            body {
-                margin: 0;
-                padding-bottom: 3rem;
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                    Roboto, Helvetica, Arial, sans-serif;
-            }
-
-            #form {
-                background: rgba(0, 0, 0, 0.15);
-                padding: 0.25rem;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                display: flex;
-                height: 3rem;
-                box-sizing: border-box;
-                backdrop-filter: blur(10px);
-            }
-            #input {
-                border: none;
-                padding: 0 1rem;
-                flex-grow: 1;
-                border-radius: 2rem;
-                margin: 0.25rem;
-            }
-            #input:focus {
-                outline: none;
-            }
-            #form > button {
-                background: #333;
-                border: none;
-                padding: 0 1rem;
-                margin: 0.25rem;
-                border-radius: 3px;
-                outline: none;
-                color: #fff;
-            }
-
-            #messages {
-                list-style-type: none;
-                margin: 0;
-                padding: 0;
-            }
-            #messages > li {
-                padding: 0.5rem 1rem;
-            }
-            #messages > li:nth-child(odd) {
-                background: #efefef;
-            }
-        </style>
-    </head>
-    <body>
-        <ul id="messages"></ul>
-        <form id="form" action="">
-            <input id="input" autocomplete="off" /><button>Send</button>
-        </form>
     </body>
 </html>
